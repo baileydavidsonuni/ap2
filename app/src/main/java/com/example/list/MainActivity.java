@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends Activity {
     private ArrayList<String> items;
@@ -50,7 +51,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void onItemClick(AdapterView<?> adapter,
                                             View item, int pos, long id) {
-                        Intent i = new Intent (getApplicationContext(), NestedActivity.class);
+                        Intent i = new Intent (getApplicationContext(), EditActivity.class);
                         String title = ( (TextView) item ).getText().toString();
                         i.putExtra("title", title);
                         startActivity(i);
@@ -64,11 +65,9 @@ public class MainActivity extends Activity {
     private void read() { // Reading a list from the database
         File filesDir = getFilesDir();
         File listFile = new File(filesDir, "list.txt"); //not an ideal implementation nor strictly functional
-        try {
-            items = new ArrayList<String>(FileUtils.readLines(listFile));
-        } catch (IOException e) {
-            items = new ArrayList<String>();
-        }
+        String[] files = filesDir.list();
+
+        items = new ArrayList<String>(Arrays.asList(files));
     }
 
     private void write() { // Writing a list made by the user to the database
@@ -81,12 +80,9 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void onAddItem(View v) {
-        EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
-        String itemText = etNewItem.getText().toString();
-        itemsAdapter.add(itemText);
-        etNewItem.setText("");
-        write();
+    public void onCreateItem(View v) {
+        Intent i = new Intent (getApplicationContext(), CreateActivity.class);
+        startActivity(i);
     }
 
 }
